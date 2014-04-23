@@ -66,17 +66,30 @@ def find_all_paths(graph, start):
             if path:
                 print "Found: ", i, path 
 
-def load_data(filename):
+def load_data_bin(filename):
     global GRAPH, COSTS
+    print "Loading integers..."
+    with open(filename) as fin:
+        data = [l[:-1] for l in fin.readlines()]
+        data = [l.split(' ') for l in data]
+        data = [[int(n) for n in s] for s in data]
+        nodes = data
+        GRAPH, COSTS = parse(nodes)
+     
+
+def load_data(filename):
+    print "Converting hash data..."
     with open(filename) as fin:
         data = [l[:-1] for l in fin.readlines()]
         data = [l.split(' ') for l in data]
         nodes = parse_nodes(data)
-        GRAPH, COSTS = parse(nodes)
-    print "Data loaded."
+        with open(filename + '.bin', 'w') as fout:
+            data = '\n'.join([' '.join([str(s) for s in l]) for l in nodes])
+            fout.write(data)
+    print "Data converted"
  
 
-FILE = 'anony-100k.txt'
+FILE = 'anony-100k.txt.bin'
 MAX_LEN = 3
 START = 2
 GRAPH = None
@@ -91,7 +104,11 @@ manager = Manager()
 @manager.command
 def analyse(filename=None):
     filename = filename or FILE
-    load_data(filename)
+    if filename.endswith('.bin'):
+        load_data_bin(filename)
+    else:
+        load_data(filename)
+        return
     print "Keys:", len(GRAPH.keys())
     print "Edges:", len(COSTS.keys()) 
     print "Max node:", max(GRAPH.keys() + list(chain(*GRAPH.values())))
