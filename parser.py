@@ -70,7 +70,7 @@ def find_all_paths(graph, start):
 def find_all2(graph, probe):
     drumuri = []
     #probe = [i for i in probe if i in graph]
-    for lungime in (3, 2, 1):
+    for lungime in (4, ):
         print "Searching lungime=", lungime
         lungimi = {}
         for i in probe:
@@ -141,7 +141,7 @@ def analyse(filename=None):
     print "Max edge:", max(interactions), "Avg edge: ", float(sum(interactions)/len(interactions))
 
     print "DFS:"
-    find_all2(GRAPH, range(1, 100))
+    find_all2(GRAPH, range(10000, 10100))
 
 if __name__ == '__main__':
     manager.run() 
